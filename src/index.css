@@ -1,0 +1,363 @@
+/* Tipografía base */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #000000; 
+  color: #FFFFFF; 
+  margin: 0;
+  padding: 0;
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+  color: #1E90FF; 
+}
+
+/* Texto secundario */
+.text-secondary {
+  color: #D3D3D3 !important;
+}
+
+/* Botones personalizados */
+.btn-gamer {
+  background-color: #39FF14;
+  color: #db0e0e;
+  font-weight: bold;
+  border: none;
+}
+.btn-gamer:hover {
+  background-color: #32cc10;
+  color: #fff;
+}
+
+/* Navbar */
+.navbar {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.navbar-brand span {
+  color: #312f34; 
+  letter-spacing: 2px;
+}
+
+.nav-link {
+  color: #D3D3D3 !important;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #000000 !important; 
+}
+
+/* HERO */
+#inicio {
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+#inicio h1 span {
+  color: #39FF14; 
+}
+
+#inicio img {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animación flotante para el logo */
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Bloque Identidad */
+#mision-vision .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#mision-vision .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 20px rgba(30, 144, 255, 0.6);
+}
+
+#catalogo .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#catalogo .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); 
+}
+
+#catalogo .nav-pills .nav-link {
+  background: #111;
+  color: #D3D3D3;
+  margin: 0 5px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+#catalogo .nav-pills .nav-link.active {
+  background: #1b87ce;  /* Verde neón */
+  color: #fff;          /* Texto blanco */
+}
+
+#catalogo .nav-pills .nav-link:hover {
+  background: #1E90FF;
+  color: #fff;
+}
+
+#catalogo .input-group .form-control::placeholder { color: #888; }
+#catalogo .input-group .form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(57,255,20,0.25);
+  border-color: #39FF14;
+}
+
+/* Carrito  */
+#carrito {
+  padding-top: 4rem;
+  padding-bottom: 6rem;
+}
+
+#carrito header h2 {
+  color: #1E90FF; 
+  margin-bottom: 0.5rem;
+}
+
+#carrito header p {
+  color: #D3D3D3;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Tabla de productos */
+#carrito table {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #111 !important;
+}
+
+#carrito th {
+  background-color: #0d0d0d !important;
+  color: #39FF14 !important;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  padding: 1rem;
+}
+
+#carrito td {
+  background-color: #1a1a1a !important;
+  color: #fff;
+  vertical-align: middle;
+  padding: 1rem;
+  border-color: #222 !important;
+}
+
+#carrito tr:hover td {
+  background-color: #222 !important;
+}
+
+/* Inputs de cantidad */
+#carrito input[type="number"] {
+  max-width: 80px;
+  text-align: center;
+  border: 1px solid #39FF14;
+  border-radius: 8px;
+  padding: 0.3rem;
+}
+
+#carrito input[type="number"]:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(57,255,20,0.5);
+}
+
+/* Botón eliminar */
+#carrito .btn-outline-danger {
+  border: 1px solid #ff3333;
+  color: #ff6666;
+  transition: all 0.2s ease;
+}
+
+#carrito .btn-outline-danger:hover {
+  background-color: #ff3333;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 51, 51, 0.7);
+}
+
+/* Resumen de compra */
+#carrito h4 {
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 1rem;
+}
+
+#carrito .text-success {
+  color: #39FF14 !important;
+  font-size: 1.3rem;
+}
+
+/* Botones finales */
+#carrito .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+#carrito .btn-outline-light:hover {
+  background-color: #1E90FF;
+  border-color: #1E90FF;
+}
+
+/* Comunidad / Blog */
+#comunidad .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#comunidad .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
+}
+#comunidad img {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Footer */
+footer a:hover {
+  color: #39FF14 !important; 
+}
+
+footer img {
+  filter: drop-shadow(0 0 6px rgba(30,144,255,0.7));
+}
+
+/* Contacto */
+#contacto input, 
+#contacto textarea {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+#contacto input:focus,
+#contacto textarea:focus {
+  border-color: #1E90FF;
+  box-shadow: 0 0 10px rgba(30,144,255,0.5);
+}
+
+/* Modales Login / Registro */
+.modal-content {
+  border-radius: 12px;
+  border: 1px solid #1E90FF;
+}
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Carrito */
+#carrito .list-group-item {
+  border: none;
+}
+#carrito .btn-outline-danger {
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+/* Programa de fidelización */
+#fidelizacion .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#fidelizacion .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 25px rgba(57, 255, 20, 0.6);
+}
+
+/* Reseñas */
+#reseñas .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#reseñas .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
+}
+
+/* Mapa de eventos */
+#eventos iframe {
+  border-radius: 12px;
+  border: 2px solid #1E90FF;
+}
+
+/* Redes Sociales */
+#social a.btn {
+  transition: all 0.3s ease;
+  border-radius: 50px;
+}
+#social a.btn:hover {
+  background-color: #39FF14;
+  color: #000 !important;
+  border-color: #39FF14;
+}
+
+.card-img-top {
+  max-height: 200px;     
+  object-fit: contain;   
+  margin: 10px;          
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card {
+  overflow: hidden;
+}
+
+/* ====== Fondo interactivo (canvas) ====== */
+#bg-canvas{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;          /* atrás de todo */
+  pointer-events: none; /* no bloquea clicks */
+  display: block;
+}
+
+/* Hacer que las secciones con clases bg-dark/bg-black sean semi-transparentes
+   para que el fondo se vea por debajo. Solo afecta a <section> con esas clases. */
+section.bg-dark, section.bg-black {
+  background-color: rgba(0,0,0,0.75) !important;
+}
+
+/* Si tienes secciones con clases personalizadas, aplica igualmente:
+   .overlay-section { background-color: rgba(0,0,0,0.75) !important; } */
+
+   #bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: #000;
+}
+
+.btn-gamer {
+  background: linear-gradient(45deg, #39ff14, #00ffff);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-gamer:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #39ff14aa;
+}
+
+.btn-categoria.active,
+.btn-gamer.active {
+  background: #39ff14 !important;
+  color: #000 !important;
+}
+
