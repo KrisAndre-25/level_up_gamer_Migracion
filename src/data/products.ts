@@ -14,7 +14,7 @@ export const products: Product[] = [
     description: "Un emocionante juego de cartas con temática gamer. Perfecto para noches de juego con amigos y familiares.",
     category: "Juegos de Mesa",
     price: 24990,
-    imageSrc: "/assets/img/cartasGamer.png",
+    imageSrc: "/assets/img/productos/cartas-gamer.jpg",
   },
   {
     id: 2,

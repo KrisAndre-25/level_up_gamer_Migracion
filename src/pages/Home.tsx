@@ -459,47 +459,70 @@ export const Home = () => {
       </section>
 
       {/* Comunidad Gamer Épica */}
-      <section id="comunidad" className="py-5 bg-black text-white">
-        <div className="container">
-          <header className="text-center mb-5">
-            <h2 className="display-4 fw-bold text-warning mb-3">COMUNIDAD GAMER</h2>
-            <p className="text-light fs-5">Conecta, compite y crece con otros gamers 🎯</p>
-          </header>
+     {/* Sección Comunidad Gamer - Agregar en home.tsx */}
+<section id="comunidad" className="py-5 bg-black text-white">
+  <div className="container">
+    <header className="text-center mb-5">
+      <h2 className="display-4 fw-bold text-gamer mb-3">COMUNIDAD GAMER</h2>
+      <p className="text-light fs-5">Conecta, compite y crece con otros gamers 😊</p>
+    </header>
 
-          <div className="row g-4">
-            <div className="col-12 col-md-6 col-lg-3 text-center">
-              <div className="feature-card p-4">
-                <div className="mario-character">🏆</div>
-                <h4 className="text-white">TORNEOS ÉPICOS</h4>
-                <p className="text-light">Competencias mensuales con premios legendarios y reconocimiento</p>
-              </div>
-            </div>
-            <div className="col-12 col-md-6 col-lg-3 text-center">
-              <div className="feature-card p-4">
-                <div className="mario-character">🎁</div>
-                <h4 className="text-white">SORTEOS LEGENDARIOS</h4>
-                <p className="text-light">Productos exclusivos semanales para la comunidad</p>
-              </div>
-            </div>
-            <div className="col-12 col-md-6 col-lg-3 text-center">
-              <div className="feature-card p-4">
-                <div className="mario-character">💬</div>
-                <h4 className="text-white">FOROS ESTRATÉGICOS</h4>
-                <p className="text-light">Discute tácticas, comparte tips y resuelve dudas</p>
-              </div>
-            </div>
-            <div className="col-12 col-md-6 col-lg-3 text-center">
-              <div className="feature-card p-4">
-                <div className="mario-character">📚</div>
-                <h4 className="text-white">GUÍAS PRO</h4>
-                <p className="text-light">Aprende de los mejores y domina cada juego</p>
-              </div>
-            </div>
-          </div>
+    <div className="row g-4">
+      <div className="col-12 col-md-6 col-lg-3 text-center">
+        <div className="feature-card p-4 h-100">
+          <div className="mario-character" style={{
+            fontSize: '3rem',
+            marginBottom: '1rem',
+            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+          }}>🏆</div> 
+          <h4 className="text-white mb-3">TORNEOS ÉPICOS</h4>
+          <p className="text-light">Competencias mensuales con premios legendarios y reconocimiento</p>
         </div>
-      </section>
-
+      </div>
       
+      <div className="col-12 col-md-6 col-lg-3 text-center">
+        <div className="feature-card p-4 h-100">
+          <div className="mario-character" style={{
+            fontSize: '3rem',
+            marginBottom: '1rem',
+            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+          }}>🎁</div>
+          <h4 className="text-white mb-3">SORTEOS LEGENDARIOS</h4>
+          <p className="text-light">Productos exclusivos semanales para la comunidad</p>
+        </div>
+      </div>
+      
+      <div className="col-12 col-md-6 col-lg-3 text-center">
+        <div className="feature-card p-4 h-100">
+          <div className="mario-character" style={{
+            fontSize: '3rem',
+            marginBottom: '1rem',
+            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+          }}>💬</div>
+          <h4 className="text-white mb-3">FOROS ESTRATÉGICOS</h4>
+          <p className="text-light">Discute tácticas, comparte tips y resuelve dudas</p>
+        </div>
+      </div>
+      
+      <div className="col-12 col-md-6 col-lg-3 text-center">
+        <div className="feature-card p-4 h-100">
+          <div className="mario-character" style={{
+            fontSize: '3rem',
+            marginBottom: '1rem',
+            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+          }}>📚</div>
+          <h4 className="text-white mb-3">GUÍAS PRO</h4>
+          <p className="text-light">Aprende de los mejores y domina cada juego</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Botón de acción opcional */}
+    <div className="text-center mt-5">
+      <button className="btn-gamer btn-lg">Únete a la Comunidad</button>
+    </div>
+  </div>
+</section>
 
       {/* Programa LevelUp Interactivo */}
       <section id="fidelizacion" className="py-5 bg-dark text-white">

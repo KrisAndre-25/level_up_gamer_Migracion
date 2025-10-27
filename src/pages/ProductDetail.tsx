@@ -31,6 +31,8 @@ const ProductDetail: React.FC = () => {
     }
     
     localStorage.setItem(KEY, JSON.stringify(carrito));
+
+    window.dispatchEvent(new Event('cartUpdated'));
     
     // Efecto de confeti visual
     const button = document.querySelector('.add-to-cart-btn');

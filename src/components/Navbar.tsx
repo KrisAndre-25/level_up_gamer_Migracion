@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Cart from './Cart'; // Importamos el componente Cart
 
 export const Navbar: React.FC = () => {
   return (
@@ -73,6 +74,51 @@ export const Navbar: React.FC = () => {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2857, 255, 20, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
           }
 
+          /* Estilos específicos para el carrito en navbar */
+          .cart-nav-item {
+            display: flex;
+            align-items: center;
+          }
+
+          .cart-button-nav {
+            background: none;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            margin: 0 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+
+          .cart-button-nav:hover {
+            background: #39FF14;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+          }
+
+          .cart-count-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+          }
+
           @media (max-width: 991.98px) {
             .navbar-collapse-gamer {
               background: #1a1a1a;
@@ -85,6 +131,13 @@ export const Navbar: React.FC = () => {
             .nav-link-gamer {
               margin: 5px 0;
               text-align: center;
+            }
+
+            .cart-button-nav {
+              margin: 5px 0;
+              text-align: center;
+              justify-content: center;
+              width: 100%;
             }
           }
         `}
@@ -120,11 +173,9 @@ export const Navbar: React.FC = () => {
                   Productos
                 </Link>
               </li>
-              <li className="nav-item">
-                <a className="nav-link nav-link-gamer" href="#">
-                  <i className="bi bi-cart3 me-1"></i>
-                  Carrito
-                </a>
+              <li className="nav-item cart-nav-item">
+                {/* Reemplazamos el enlace simple por el componente Cart */}
+                <Cart />
               </li>
             </ul>
           </div>
