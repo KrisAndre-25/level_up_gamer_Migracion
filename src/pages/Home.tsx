@@ -381,7 +381,7 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Visión Mejorada */}
+      {/* Visión*/}
       <section id="vision" className="py-5 bg-black text-white">
         <div className="container">
           <header className="text-center mb-5">
@@ -426,7 +426,7 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Compartir Experiencia Mejorado */}
+      {/* Compartir Experiencia */}
       <section id="social" className="py-5 bg-dark text-white">
         <div className="container text-center">
           <header className="mb-5">
@@ -460,7 +460,6 @@ export const Home = () => {
       </section>
 
       {/* Comunidad Gamer Épica */}
-     {/* Sección Comunidad Gamer - Agregar en home.tsx */}
 <section id="comunidad" className="py-5 bg-black text-white">
   <div className="container">
     <header className="text-center mb-5">

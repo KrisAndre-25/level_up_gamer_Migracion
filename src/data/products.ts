@@ -5,7 +5,7 @@ export type Product = {
   category: string;
   price: number;
   imageSrc: string;
-  images: string[]; // ✅ NUEVA PROPIEDAD
+  images: string[]; 
 };
 
 export const products: Product[] = [

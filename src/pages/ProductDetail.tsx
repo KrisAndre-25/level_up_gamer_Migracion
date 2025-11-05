@@ -33,8 +33,7 @@ const ProductDetail: React.FC = () => {
     localStorage.setItem(KEY, JSON.stringify(carrito));
 
     window.dispatchEvent(new Event('cartUpdated'));
-    
-    // Efecto de confeti visual
+
     const button = document.querySelector('.add-to-cart-btn');
     if (button) {
       button.classList.add('pulse');
@@ -63,7 +62,7 @@ const ProductDetail: React.FC = () => {
     );
   }
 
-  // Imágenes adicionales (simuladas para el ejemplo)
+
 const productImages = product?.images && product.images.length > 0 
   ? product.images 
   : product?.imageSrc 
@@ -221,7 +220,6 @@ const productImages = product?.images && product.images.length > 0
 
       <div className="container py-5">
         <div className="row g-5">
-          {/* Galería de Imágenes */}
           <div className="col-12 col-lg-6">
             <div className="text-center mb-4">
               <img 
