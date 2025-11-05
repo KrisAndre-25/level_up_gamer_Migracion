@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Cart from './Cart'; // Importamos el componente Cart
+import Cart from './Cart'; 
 
 export const Navbar: React.FC = () => {
   return (
@@ -174,7 +174,6 @@ export const Navbar: React.FC = () => {
                 </Link>
               </li>
               <li className="nav-item cart-nav-item">
-                {/* Reemplazamos el enlace simple por el componente Cart */}
                 <Cart />
               </li>
             </ul>

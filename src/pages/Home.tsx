@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import logoGamer from '../assets/img/logo_gamer.png';
 
 // Componente de Partículas para el fondo interactivo
 const ParticlesBackground: React.FC = () => {
@@ -348,34 +349,34 @@ export const Home = () => {
               </div>
             </div>
 
-            <div className="col-12 col-lg-6 text-center">
-              <img 
-                src="assets/logo_gamer.png" 
-                alt="Level Up Gamer Logo" 
-                className="img-fluid rounded shadow-lg hero-image floating-element" 
-                style={{maxWidth: "450px"}} 
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const container = e.currentTarget.parentElement;
-                  if (container) {
-                    const fallback = document.createElement('div');
-                    fallback.className = 'text-center';
-                    fallback.innerHTML = `
-                      <div class="mario-character">🎮</div>
-                      <h3 class="text-success mt-3">LEVEL UP GAMER</h3>
-                      <p class="text-light">Tu tienda gaming definitiva</p>
-                    `;
-                    container.appendChild(fallback);
-                  }
-                }}
-              />
-              {/* Badge de oferta */}
-              <div className="mt-4">
-                <span className="badge bg-success fs-6 p-3 rounded-pill">
-                  🎉 OFERTA ESPECIAL: 15% OFF EN HEADSETS GAMER
-                </span>
-              </div>
-            </div>
+<div className="col-12 col-lg-6 text-center">
+  <img 
+    src={logoGamer} 
+    alt="Level Up Gamer Logo" 
+    className="img-fluid rounded shadow-lg hero-image floating-element" 
+    style={{maxWidth: "450px"}} 
+    onError={(e) => {
+      e.currentTarget.style.display = 'none';
+      const container = e.currentTarget.parentElement;
+      if (container) {
+        const fallback = document.createElement('div');
+        fallback.className = 'text-center';
+        fallback.innerHTML = `
+          <div class="mario-character">🎮</div>
+          <h3 class="text-success mt-3">LEVEL UP GAMER</h3>
+          <p class="text-light">Tu tienda gaming definitiva</p>
+        `;
+        container.appendChild(fallback);
+      }
+    }}
+  />
+  {/* Badge de oferta */}
+  <div className="mt-4">
+    <span className="badge bg-success fs-6 p-3 rounded-pill">
+      🎉 OFERTA ESPECIAL: 15% OFF EN HEADSETS GAMER
+    </span>
+  </div>
+</div>
           </div>
         </div>
       </section>

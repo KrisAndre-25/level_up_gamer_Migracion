@@ -64,11 +64,11 @@ const ProductDetail: React.FC = () => {
   }
 
   // Imágenes adicionales (simuladas para el ejemplo)
-  const productImages = [
-    product.imageSrc,
-    product.imageSrc, // En un caso real serían imágenes diferentes
-    product.imageSrc,
-  ];
+const productImages = product?.images && product.images.length > 0 
+  ? product.images 
+  : product?.imageSrc 
+    ? [product.imageSrc] 
+    : [];
 
   return (
     <>

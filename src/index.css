@@ -764,7 +764,7 @@ section.bg-dark, section.bg-black {
   }
 }
 
-/* ===== ESTILOS CORREGIDOS PARA LAS CARDS ===== */
+
 
 /* Contenedor de imagen mejorado */
 .product-img-container {
@@ -905,7 +905,6 @@ section.bg-dark, section.bg-black {
   color: #39FF14 !important;
 }
 
-/* Estilos adicionales para mejorar la sección Comunidad Gamer */
 .mario-character {
   transition: all 0.3s ease;
 }
@@ -915,7 +914,7 @@ section.bg-dark, section.bg-black {
   filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.8)) !important;
 }
 
-/* Asegurar que las feature-cards tengan altura uniforme */
+/* altura uniforme */
 .feature-card {
   display: flex;
   flex-direction: column;
@@ -929,7 +928,7 @@ section.bg-dark, section.bg-black {
   justify-content: center;
 }
 
-/* Mejorar el título principal */
+/* Mejorar del título principal */
 .text-gamer {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   -webkit-background-clip: text;
@@ -945,3 +944,5 @@ section.bg-dark, section.bg-black {
     margin-bottom: 1rem;
   }
 }
+
+

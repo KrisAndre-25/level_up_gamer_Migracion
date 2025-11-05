@@ -7,17 +7,8 @@ const Products: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Precios calculados una sola vez
-  const { minPriceProducts, maxPriceProducts } = useMemo(() => {
-    const prices = products.map(p => p.price);
-    return {
-      minPriceProducts: Math.min(...prices),
-      maxPriceProducts: Math.max(...prices)
-    };
-  }, []);
-
-  const [minPrice, setMinPrice] = useState(minPriceProducts);
-  const [maxPrice, setMaxPrice] = useState(maxPriceProducts);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000000);
 
   // Categorías únicas
   const categories = useMemo(() => 
@@ -28,7 +19,7 @@ const Products: React.FC = () => {
   const filteredProducts = useMemo(() => 
     products.filter((p) => {
       const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
-      const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+      const matchesPrice = p.price >= minPrice && p.price <= (maxPrice === 1000000 ? Infinity : maxPrice);
       const matchesSearch = searchTerm === "" || 
         p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -66,8 +57,8 @@ const Products: React.FC = () => {
   const resetFilters = () => {
     setSelectedCategory("all");
     setSearchTerm("");
-    setMinPrice(minPriceProducts);
-    setMaxPrice(maxPriceProducts);
+    setMinPrice(0);
+    setMaxPrice(1000000);
   };
 
   return (
@@ -77,14 +68,13 @@ const Products: React.FC = () => {
         <p className="text-light lead">Descubre lo mejor en tecnología gaming al mejor precio</p>
       </div>
 
-      {/* SECCIÓN DE FILTROS */}
+      {/* SECCIÓN DE FILTROS - ORGANIZADO */}
       <div className="filter-section">
         <h4 className="text-gamer mb-4">🔍 Filtros de Búsqueda</h4>
         
-        <div className="filter-row">
-          
+        <div className="row g-3 align-items-end">
           {/* FILTRO DE BÚSQUEDA POR TEXTO */}
-          <div className="filter-group">
+          <div className="col-12 col-md-3">
             <label className="filter-label">Buscar por nombre</label>
             <input
               type="text"
@@ -96,7 +86,7 @@ const Products: React.FC = () => {
           </div>
 
           {/* FILTRO DE CATEGORÍA */}
-          <div className="filter-group">
+          <div className="col-12 col-md-2">
             <label className="filter-label">Categoría</label>
             <select 
               className="form-select filter-select"
@@ -105,50 +95,50 @@ const Products: React.FC = () => {
             >
               {categories.map(category => (
                 <option key={category} value={category}>
-                  {category === "all" ? "Todas las categorías" : category}
+                  {category === "all" ? "Todas" : category}
                 </option>
               ))}
             </select>
           </div>
 
           {/* FILTRO DE PRECIO MÍNIMO Y MÁXIMO */}
-          <div className="filter-group">
+          <div className="col-12 col-md-4">
             <label className="filter-label">Rango de Precio</label>
-            <div className="price-inputs">
-              <div className="price-input-group">
+            <div className="row g-2 align-items-center">
+              <div className="col">
                 <input
                   type="number"
                   className="form-control filter-input"
-                  placeholder="Mínimo"
-                  value={minPrice}
+                  placeholder="Mínimo $0"
+                  value={minPrice === 0 ? '' : minPrice}
                   onChange={(e) => {
-                    const value = e.target.value === "" ? minPriceProducts : Number(e.target.value);
-                    setMinPrice(value);
+                    const value = e.target.value === '' ? 0 : Number(e.target.value);
+                    setMinPrice(Math.max(0, value));
                   }}
                   min={0}
-                  max={maxPriceProducts}
                 />
               </div>
-              <span className="text-light mx-2">-</span>
-              <div className="price-input-group">
+              <div className="col-auto">
+                <span className="text-light">-</span>
+              </div>
+              <div className="col">
                 <input
                   type="number"
                   className="form-control filter-input"
                   placeholder="Máximo"
-                  value={maxPrice}
+                  value={maxPrice === 1000000 ? '' : maxPrice}
                   onChange={(e) => {
-                    const value = e.target.value === "" ? maxPriceProducts : Number(e.target.value);
-                    setMaxPrice(value);
+                    const value = e.target.value === '' ? 1000000 : Number(e.target.value);
+                    setMaxPrice(Math.max(0, value));
                   }}
                   min={0}
-                  max={maxPriceProducts}
                 />
               </div>
             </div>
           </div>
 
           {/* BOTÓN RESET Y CONTADOR */}
-          <div className="filter-group">
+          <div className="col-12 col-md-3">
             <div className="d-flex flex-column gap-2">
               <button 
                 className="btn btn-outline-gamer btn-sm"
@@ -157,14 +147,14 @@ const Products: React.FC = () => {
                 🔄 Reiniciar Filtros
               </button>
               <div className="text-gamer fw-bold text-center">
-                {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''} encontrado{filteredProducts.length !== 1 ? 's' : ''}
+                {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* PRODUCTOS - VERSIÓN CORREGIDA */}
+      {/* PRODUCTOS */}
       <div className="row">
         {filteredProducts.length === 0 ? (
           <div className="col-12 text-center py-5">
@@ -187,7 +177,6 @@ const Products: React.FC = () => {
                     className="product-img" 
                     alt={product.title}
                     onError={(e) => {
-                      // Si la imagen falla, mostramos un placeholder más elegante
                       e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='14' fill='%2339FF14'%3EImagen%3C/text%3E%3C/svg%3E";
                     }}
                   />
@@ -195,7 +184,7 @@ const Products: React.FC = () => {
                 <div className="card-body text-center d-flex flex-column">
                   <h5 className="card-title text-white fw-bold mb-2">{product.title}</h5>
                   
-                  {/* Categoría - Corregido */}
+                  {/* Categoría */}
                   <div className="mb-2">
                     <span className="category-badge">{product.category}</span>
                   </div>
@@ -203,7 +192,7 @@ const Products: React.FC = () => {
                   {/* Precio */}
                   <p className="price-tag mb-3">{formatPrice(product.price)}</p>
                   
-                  {/* Descripción - Mejorada */}
+                  {/* Descripción */}
                   <p className="card-text text-light flex-grow-1 product-description">
                     {product.description.length > 100 
                       ? `${product.description.substring(0, 100)}...` 
@@ -211,7 +200,7 @@ const Products: React.FC = () => {
                     }
                   </p>
                   
-                  {/* Botones - Corregidos */}
+                  {/* Botones */}
                   <div className="mt-auto pt-3">
                     <div className="d-grid gap-2">
                       <Link 
@@ -226,7 +215,7 @@ const Products: React.FC = () => {
                         onClick={() => addToCart(product)}
                       >
                         <i className="bi bi-cart-plus me-2"></i>
-                        Agregar al Carrito {/* ✅ Corregido */}
+                        Agregar al Carrito
                       </button>
                     </div>
                   </div>

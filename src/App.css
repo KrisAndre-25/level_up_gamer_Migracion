@@ -378,3 +378,224 @@ a:hover {
   text-decoration: underline;
 }
 
+/* FILTROS STYLES */
+.filter-section {
+  background: rgba(26, 26, 26, 0.9);
+  border-radius: 15px;
+  padding: 25px;
+  border: 2px solid #39FF14;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 25px rgba(57, 255, 20, 0.1);
+}
+
+.filter-label {
+  color: #39FF14;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.filter-input, .filter-select {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.filter-input:focus, .filter-select:focus {
+  border-color: #39FF14;
+  box-shadow: 0 0 0 0.2rem rgba(57, 255, 20, 0.25);
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.filter-input::placeholder {
+  color: #666;
+}
+
+/* Estilos para productos */
+.product-card {
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid #333;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  border-color: #39FF14;
+  box-shadow: 0 8px 25px rgba(57, 255, 20, 0.2);
+}
+
+.product-img-container {
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.05);
+}
+
+.category-badge {
+  background: rgba(57, 255, 20, 0.2);
+  color: #39FF14;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.price-tag {
+  background: linear-gradient(135deg, #39FF14, #28cc0f);
+  color: #000;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+.feature-card {
+  background: rgba(57, 255, 20, 0.1);
+  border: 1px solid #39FF14;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  background: rgba(57, 255, 20, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-section .col-md-3,
+  .filter-section .col-md-2,
+  .filter-section .col-md-4 {
+    margin-bottom: 15px;
+  }
+  
+  .filter-section {
+    padding: 20px 15px;
+  }
+}
+
+/* LAYOUT STYLES */
+.gaming-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0b0b0b;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 20px;
+}
+
+/* Asegurar que el footer siempre esté abajo */
+.gaming-layout > :last-child {
+  margin-top: auto;
+}
+
+/* FOOTER STYLES */
+footer {
+  border-top: 2px solid #39FF14;
+  background: #1a1a1a !important;
+  margin-top: auto;
+}
+
+.text-gamer {
+  color: #39FF14 !important;
+}
+
+.social-links a {
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #39FF14 !important;
+}
+
+/* FOOTER STYLES MEJORADOS */
+footer {
+  border-top: 2px solid #39FF14;
+  background: #1a1a1a !important;
+  margin-top: auto;
+}
+
+.text-gamer {
+  color: #39FF14 !important;
+}
+
+/* Redes Sociales */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(57, 255, 20, 0.1);
+  border: 2px solid #39FF14;
+  border-radius: 50%;
+  color: #39FF14 !important;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: #39FF14;
+  color: #000 !important;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(57, 255, 20, 0.3);
+}
+
+/* Efectos hover para enlaces */
+.hover-gamer {
+  transition: all 0.3s ease;
+}
+
+.hover-gamer:hover {
+  color: #39FF14 !important;
+  padding-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .social-links {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .text-md-end {
+    text-align: center !important;
+  }
+  
+  .legal-links {
+    text-align: center !important;
+  }
+}

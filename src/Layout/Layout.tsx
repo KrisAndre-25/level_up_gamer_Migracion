@@ -1,15 +1,21 @@
+import React from 'react';
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 
-<div className="gaming-layout">
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div className="gaming-layout">
       <Navbar />
       <main className="main-content">
-        <Navbar />
+        {children}
       </main>
       <Footer />
-      
-      {/* Elementos globales que quieras agregar */}
-      {/* <ChatBubble /> */}
-      {/* <Notifications /> */}
-      {/* <MusicPlayer /> */}
     </div>
+  );
+};
+
+export default Layout;
