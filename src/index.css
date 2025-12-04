@@ -946,4 +946,149 @@ section.bg-dark, section.bg-black {
   }
 }
 
+/* Estilos para formularios gamer */
+.form-gamer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  border: 1px solid #39FF14 !important;
+  border-radius: 10px;
+  color: #fff !important;
+}
 
+.form-gamer:focus {
+  background: #0b0b0b !important;
+  border-color: #39FF14 !important;
+  box-shadow: 0 0 0 0.2rem rgba(57, 255, 20, 0.25) !important;
+  color: #fff !important;
+}
+
+.form-gamer::placeholder {
+  color: #888 !important;
+}
+
+.btn-gamer {
+  background: #39FF14 !important;
+  color: #000 !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-gamer:hover {
+  background: #28cc0f !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(57, 255, 20, 0.3) !important;
+}
+
+.btn-gamer:disabled {
+  background: #1a7a0a !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.card-gamer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  border: 1px solid #39FF14 !important;
+  border-radius: 15px !important;
+  box-shadow: 0 8px 32px rgba(57, 255, 20, 0.1) !important;
+}
+
+.text-gamer {
+  color: #39FF14 !important;
+}
+
+/* Estilos para labels */
+.form-label {
+  color: #39FF14 !important;
+  font-weight: 600 !important;
+}
+
+/* Mejora el footer existente */
+.footer-gamer {
+  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%) !important;
+  border-top: 2px solid #39FF14 !important;
+  color: #fff !important;
+}
+
+.footer-gamer a {
+  color: #39FF14 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.footer-gamer a:hover {
+  color: #28cc0f !important;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5) !important;
+}
+
+/* Mejorar espaciado del footer */
+.main-content {
+  min-height: calc(100vh - 200px); /* Ajusta según la altura de tu footer */
+  padding-bottom: 2rem;
+}
+
+/* Footer mejorado */
+.footer-gamer {
+  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%) !important;
+  border-top: 2px solid #39FF14 !important;
+  color: #fff !important;
+  padding: 2rem 0 !important;
+  margin-top: 3rem !important;
+}
+
+.footer-gamer a {
+  color: #39FF14 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.footer-gamer a:hover {
+  color: #28cc0f !important;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5) !important;
+}
+
+/* Mejorar cards de login/register */
+.auth-card {
+  margin-bottom: 3rem !important;
+  margin-top: 2rem !important;
+}
+
+/* Mejorar el Cart en navbar */
+.cart-nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.cart-button-nav {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.cart-button-nav:hover {
+  background: rgba(57, 255, 20, 0.1);
+  color: #39FF14;
+  border: 1px solid #39FF14;
+}
+
+.cart-count-badge {
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}

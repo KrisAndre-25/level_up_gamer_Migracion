@@ -1,8 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cart from './Cart'; 
+import { getUserRole } from '../util/auth'; // Importa getUserRole
 
 export const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
+    navigate("/");
+    window.location.reload();
+  };
+
   return (
     <>
       <style>
@@ -10,176 +21,237 @@ export const Navbar: React.FC = () => {
           .navbar-gamer {
             background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%) !important;
             border-bottom: 2px solid #39FF14;
-            box-shadow: 0 4px 12px rgba(57, 255, 20, 0.2);
-            padding: 12px 0;
+            box-shadow: 0 4px 20px rgba(57, 255, 20, 0.15);
+            padding: 0.8rem 0;
+          }
+
+          .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
           }
 
           .navbar-brand-gamer {
             color: #39FF14 !important;
             font-weight: 800;
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+            font-size: 1.6rem;
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
           }
 
           .navbar-brand-gamer:hover {
             color: #28cc0f !important;
-            text-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
             transform: scale(1.05);
+          }
+
+          .nav-main {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            justify-content: center;
+          }
+
+          .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
           }
 
           .nav-link-gamer {
             color: #fff !important;
             font-weight: 600;
-            margin: 0 8px;
-            padding: 8px 16px !important;
+            padding: 0.5rem 1.2rem !important;
             border-radius: 8px;
             transition: all 0.3s ease;
-            position: relative;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.95rem;
           }
 
           .nav-link-gamer:hover {
+            background: rgba(57, 255, 20, 0.1);
+            color: #39FF14 !important;
+            border: 1px solid #39FF14;
+            transform: translateY(-1px);
+          }
+
+          .nav-link-gamer.active {
             background: #39FF14;
             color: #000 !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
           }
 
-          .nav-link-gamer::before {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: #39FF14;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-          }
-
-          .nav-link-gamer:hover::before {
-            width: 80%;
-          }
-
-          .navbar-toggler-gamer {
-            border: 1px solid #39FF14 !important;
+          /* Botones de auth */
+          .auth-btn {
             background: transparent;
-          }
-
-          .navbar-toggler-gamer:focus {
-            box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.25) !important;
-          }
-
-          .navbar-toggler-icon-custom {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2857, 255, 20, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-          }
-
-          /* Estilos específicos para el carrito en navbar */
-          .cart-nav-item {
-            display: flex;
-            align-items: center;
-          }
-
-          .cart-button-nav {
-            background: none;
-            border: none;
-            color: #fff;
+            border: 1px solid #39FF14;
+            color: #39FF14;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             font-weight: 600;
-            margin: 0 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            position: relative;
-            cursor: pointer;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 0.4rem;
           }
 
-          .cart-button-nav:hover {
+          .auth-btn.login {
+            background: rgba(57, 255, 20, 0.1);
+          }
+
+          .auth-btn:hover {
             background: #39FF14;
             color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(57, 255, 20, 0.3);
           }
 
-          .cart-count-badge {
-            position: absolute;
-            top: -5px;
-            right: 5px;
-            background: #ff4444;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
+          /* Usuario logeado */
+          .user-section {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            gap: 1rem;
           }
 
-          @media (max-width: 991.98px) {
-            .navbar-collapse-gamer {
-              background: #1a1a1a;
-              border-radius: 8px;
-              margin-top: 10px;
-              padding: 15px;
-              border: 1px solid #39FF14;
-            }
-            
-            .nav-link-gamer {
-              margin: 5px 0;
-              text-align: center;
+          .user-info {
+            color: #39FF14;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+          }
+
+          .logout-btn {
+            background: transparent;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+          }
+
+          .logout-btn:hover {
+            background: #ff4444;
+            color: #fff;
+            transform: translateY(-1px);
+          }
+
+          /* Cart mejorado */
+          .cart-nav-wrapper {
+            display: flex;
+            align-items: center;
+          }
+
+          /* Admin link */
+          .admin-link {
+            background: rgba(255, 153, 0, 0.1);
+            border: 1px solid #FF9900;
+          }
+
+          /* Mobile */
+          @media (max-width: 768px) {
+            .navbar-container {
+              flex-direction: column;
+              gap: 1rem;
             }
 
-            .cart-button-nav {
-              margin: 5px 0;
-              text-align: center;
-              justify-content: center;
+            .nav-main {
+              order: 2;
               width: 100%;
+              justify-content: center;
+            }
+
+            .nav-auth {
+              order: 3;
+              width: 100%;
+              justify-content: center;
+            }
+
+            .navbar-brand-gamer {
+              order: 1;
             }
           }
         `}
       </style>
 
-      <nav className="navbar navbar-expand-lg navbar-gamer">
+      <nav className="navbar-gamer">
         <div className="container">
-          <Link className="navbar-brand navbar-brand-gamer" to="/">
-            <i className="bi bi-joystick me-2"></i>
-            Level Up Gamer
-          </Link>
-          
-          <button 
-            className="navbar-toggler navbar-toggler-gamer" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav"
-          >
-            <span className="navbar-toggler-icon navbar-toggler-icon-custom"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse navbar-collapse-gamer" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link nav-link-gamer" to="/">
-                  <i className="bi bi-house me-1"></i>
-                  Inicio
+          <div className="navbar-container">
+            {/* Logo */}
+            <Link className="navbar-brand-gamer" to="/">
+              <i className="bi bi-joystick me-2"></i>
+              LevelUp Gamer
+            </Link>
+
+            {/* Navegación Principal */}
+            <div className="nav-main">
+              <Link className="nav-link-gamer" to="/">
+                <i className="bi bi-house"></i>
+                Inicio
+              </Link>
+              <Link className="nav-link-gamer" to="/products">
+                <i className="bi bi-controller"></i>
+                Productos
+              </Link>
+              
+              {/* Solo mostrar Admin Panel si el usuario es admin */}
+              {usuario && getUserRole() === 'admin' && (
+                <Link to="/admin" className="nav-link-gamer admin-link" style={{ color: '#FF9900' }}>
+                  <i className="bi bi-shield-lock"></i>
+                  Admin Panel
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link nav-link-gamer" to="/products">
-                  <i className="bi bi-controller me-1"></i>
-                  Productos
-                </Link>
-              </li>
-              <li className="nav-item cart-nav-item">
+              )}
+              
+              <div className="cart-nav-wrapper">
                 <Cart />
-              </li>
-            </ul>
+              </div>
+            </div>
+
+            {/* Autenticación */}
+            <div className="nav-auth">
+              {usuario ? (
+                <div className="user-section">
+                  <span className="user-info">
+                    <i className="bi bi-person-circle"></i>
+                    Bienvenido/a, {usuario.nombre} {usuario.apellido}
+                  </span>
+                  <button onClick={handleLogout} className="logout-btn">
+                    <i className="bi bi-box-arrow-right"></i>
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link to="/login" className="auth-btn login">
+                    <i className="bi bi-box-arrow-in-right"></i>
+                    Login
+                  </Link>
+                  <Link to="/register" className="auth-btn">
+                    <i className="bi bi-person-plus"></i>
+                    Registro
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </nav>
     </>
   );
 };
+
+export default Navbar;

@@ -1,248 +1,534 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { products } from '../data/products';
-import type { Product } from '../data/products';
+import { useEffect, useState } from "react";
+import type { Producto } from "../interfaces/Producto";
+import { getProducts } from "../api/products";
 
-const Products: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+// Interface para compatibilidad con Cart.tsx
+interface CartItem {
+  name: string;
+  unitPrice: number;
+  qty: number;
+  imageSrc?: string;
+  id?: number;
+}
+
+function Products() {
+  const [products, setProducts] = useState<Producto[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Producto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
   
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000000);
+  // Estados para filtros
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
+  const [sortBy, setSortBy] = useState("");
+  const [showFilters, setShowFilters] = useState(false); // Estado para mostrar/ocultar filtros
 
-  // Categorías únicas
-  const categories = useMemo(() => 
-    ["all", ...new Set(products.map((p) => p.category))], 
-  []);
-
-  // Filtrado optimizado
-  const filteredProducts = useMemo(() => 
-    products.filter((p) => {
-      const matchesCategory = selectedCategory === "all" || p.category === selectedCategory;
-      const matchesPrice = p.price >= minPrice && p.price <= (maxPrice === 1000000 ? Infinity : maxPrice);
-      const matchesSearch = searchTerm === "" || 
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      return matchesCategory && matchesPrice && matchesSearch;
-    }),
-    [selectedCategory, minPrice, maxPrice, searchTerm]
-  );
-
-  const formatPrice = (price: number): string => {
+  // Formatear precio
+  const formatPrice = (price: number) => {
     return `$${price.toLocaleString('es-CL')}`;
   };
 
-  const addToCart = (product: Product): void => {
-    const KEY = 'carritoLevelUp_v1';
-    let carrito = JSON.parse(localStorage.getItem(KEY) || '[]');
-    const idx = carrito.findIndex((p: any) => p.name === product.title);
-    
-    if (idx >= 0) {
-      carrito[idx].qty++;
-    } else {
-      carrito.push({ 
-        name: product.title, 
-        unitPrice: product.price, 
-        qty: 1 
-      });
+  // Cargar productos
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const productsData = await getProducts();
+        setProducts(productsData);
+        setFilteredProducts(productsData);
+        setError(null);
+      } catch (error: any) {
+        console.error("❌ Error cargando productos:", error);
+        setError(`Error: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  // Aplicar filtros cuando cambien los criterios
+  useEffect(() => {
+    let filtered = [...products];
+
+    // Filtro por nombre/descripción
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-    
-    localStorage.setItem(KEY, JSON.stringify(carrito));
-    window.dispatchEvent(new Event('cartUpdated'));
-    alert("✅ Producto agregado al carrito");
+
+    // Filtro por categoría
+    if (selectedCategory) {
+      filtered = filtered.filter(product => 
+        product.category?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+
+    // Filtro por precio mínimo
+    if (priceRange.min) {
+      filtered = filtered.filter(product => 
+        product.price >= parseFloat(priceRange.min)
+      );
+    }
+
+    // Filtro por precio máximo
+    if (priceRange.max) {
+      filtered = filtered.filter(product => 
+        product.price <= parseFloat(priceRange.max)
+      );
+    }
+
+    // Ordenar productos
+    if (sortBy) {
+      switch (sortBy) {
+        case "price-asc":
+          filtered.sort((a, b) => a.price - b.price);
+          break;
+        case "price-desc":
+          filtered.sort((a, b) => b.price - a.price);
+          break;
+        case "name-asc":
+          filtered.sort((a, b) => a.title.localeCompare(b.title));
+          break;
+        case "name-desc":
+          filtered.sort((a, b) => b.title.localeCompare(a.title));
+          break;
+        default:
+          break;
+      }
+    }
+
+    setFilteredProducts(filtered);
+  }, [searchTerm, selectedCategory, priceRange, sortBy, products]);
+
+  // Obtener categorías únicas
+  const categorias = [...new Set(products.map(product => product.category).filter(Boolean))];
+
+  // Agregar al carrito - CONECTADO CON TU CART.TSX
+  const agregarAlCarrito = (producto: Producto) => {
+    try {
+      const KEY = 'carritoLevelUp_v1'; // MISMA KEY que tu Cart.tsx
+      
+      // Obtener carrito actual de localStorage
+      const carritoStr = localStorage.getItem(KEY);
+      const carritoActual: CartItem[] = carritoStr ? JSON.parse(carritoStr) : [];
+      
+      // Verificar si el producto ya está en el carrito
+      const productoExistenteIndex = carritoActual.findIndex((item: CartItem) => 
+        item.name === producto.title
+      );
+      
+      if (productoExistenteIndex !== -1) {
+        // Si ya existe, aumentar cantidad
+        carritoActual[productoExistenteIndex].qty += 1;
+      } else {
+        // Si no existe, agregar nuevo producto
+        const nuevoItem: CartItem = {
+          name: producto.title,
+          unitPrice: producto.price,
+          qty: 1,
+          imageSrc: producto.imageSrc,
+          id: producto.id
+        };
+        carritoActual.push(nuevoItem);
+      }
+      
+      // Guardar en localStorage
+      localStorage.setItem(KEY, JSON.stringify(carritoActual));
+      
+      // Disparar evento personalizado para que Cart.tsx se actualice
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+      
+      // Mostrar notificación
+      alert(`¡${producto.title} agregado al carrito! 🛒`);
+      
+      console.log("🛒 Carrito actualizado:", carritoActual);
+    } catch (error) {
+      console.error("❌ Error al agregar al carrito:", error);
+      alert("Error al agregar el producto al carrito");
+    }
   };
 
-  // Función para resetear filtros
-  const resetFilters = () => {
-    setSelectedCategory("all");
-    setSearchTerm("");
-    setMinPrice(0);
-    setMaxPrice(1000000);
+  // Ver detalles del producto
+  const verDetalles = (producto: Producto) => {
+    setSelectedProduct(producto);
   };
+
+  // Limpiar filtros
+  const limpiarFiltros = () => {
+    setSearchTerm("");
+    setSelectedCategory("");
+    setPriceRange({ min: "", max: "" });
+    setSortBy("");
+  };
+
+  // Agrega esta sección para mostrar errores
+  if (error) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="alert alert-danger">
+          <h4>Error al cargar productos</h4>
+          <p>{error}</p>
+          <button 
+            className="btn btn-gamer mt-2"
+            onClick={() => window.location.reload()}
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border text-gamer" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-2 text-light">Cargando productos...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container py-5">
-      <div className="text-center mb-5">
-        <h1 className="text-white display-4 fw-bold mb-3">🎮 Nuestros Productos</h1>
-        <p className="text-light lead">Descubre lo mejor en tecnología gaming al mejor precio</p>
-      </div>
-
-      {/* SECCIÓN DE FILTROS - ORGANIZADO */}
-      <div className="filter-section">
-        <h4 className="text-gamer mb-4">🔍 Filtros de Búsqueda</h4>
-        
-        <div className="row g-3 align-items-end">
-          {/* FILTRO DE BÚSQUEDA POR TEXTO */}
-          <div className="col-12 col-md-3">
-            <label className="filter-label">Buscar por nombre</label>
-            <input
-              type="text"
-              className="form-control filter-input"
-              placeholder="Ej: Headset, Mouse..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* FILTRO DE CATEGORÍA */}
-          <div className="col-12 col-md-2">
-            <label className="filter-label">Categoría</label>
-            <select 
-              className="form-select filter-select"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === "all" ? "Todas" : category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* FILTRO DE PRECIO MÍNIMO Y MÁXIMO */}
-          <div className="col-12 col-md-4">
-            <label className="filter-label">Rango de Precio</label>
-            <div className="row g-2 align-items-center">
-              <div className="col">
+    <div className="container mt-4">
+      <h1 className="text-gamer text-center mb-4">Nuestros Productos</h1>
+      
+      {/* PANEL DE FILTROS COMPACTO */}
+      <div className="card card-gamer mb-4">
+        <div className="card-body py-2">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            {/* Búsqueda y botón de filtros */}
+            <div className="d-flex align-items-center gap-2 flex-grow-1" style={{minWidth: '250px'}}>
+              <div className="input-group input-group-sm" style={{width: '200px'}}>
+                <span className="input-group-text bg-dark text-gamer border-gamer">🔍</span>
                 <input
-                  type="number"
-                  className="form-control filter-input"
-                  placeholder="Mínimo $0"
-                  value={minPrice === 0 ? '' : minPrice}
-                  onChange={(e) => {
-                    const value = e.target.value === '' ? 0 : Number(e.target.value);
-                    setMinPrice(Math.max(0, value));
-                  }}
-                  min={0}
+                  type="text"
+                  placeholder="Buscar producto..."
+                  className="form-control bg-dark text-light border-gamer"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{fontSize: '0.875rem'}}
                 />
               </div>
-              <div className="col-auto">
-                <span className="text-light">-</span>
-              </div>
-              <div className="col">
-                <input
-                  type="number"
-                  className="form-control filter-input"
-                  placeholder="Máximo"
-                  value={maxPrice === 1000000 ? '' : maxPrice}
-                  onChange={(e) => {
-                    const value = e.target.value === '' ? 1000000 : Number(e.target.value);
-                    setMaxPrice(Math.max(0, value));
-                  }}
-                  min={0}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* BOTÓN RESET Y CONTADOR */}
-          <div className="col-12 col-md-3">
-            <div className="d-flex flex-column gap-2">
+              
               <button 
                 className="btn btn-outline-gamer btn-sm"
-                onClick={resetFilters}
+                onClick={() => setShowFilters(!showFilters)}
               >
-                🔄 Reiniciar Filtros
+                {showFilters ? '▲' : '▼'} Filtros
               </button>
-              <div className="text-gamer fw-bold text-center">
+            </div>
+
+            {/* Contador de productos y botón limpiar */}
+            <div className="d-flex align-items-center gap-2">
+              <small className="text-gamer">
                 {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''}
-              </div>
+              </small>
+              
+              {(searchTerm || selectedCategory || priceRange.min || priceRange.max || sortBy) && (
+                <button 
+                  className="btn btn-outline-gamer btn-sm"
+                  onClick={limpiarFiltros}
+                >
+                  🗑️ Limpiar
+                </button>
+              )}
             </div>
           </div>
+
+          {/* Filtros expandibles */}
+          {showFilters && (
+            <div className="row g-2 mt-3">
+              {/* Filtro por categoría */}
+              <div className="col-md-3">
+                <select
+                  className="form-select form-select-sm bg-dark text-light border-gamer"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  <option value="">Todas las categorías</option>
+                  {categorias.map((categoria, index) => (
+                    <option key={index} value={categoria || ""}>
+                      {categoria}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filtro por precio mínimo */}
+              <div className="col-md-2">
+                <input
+                  type="number"
+                  placeholder="Precio Mín"
+                  className="form-control form-control-sm bg-dark text-light border-gamer"
+                  value={priceRange.min}
+                  onChange={(e) => setPriceRange({...priceRange, min: e.target.value})}
+                />
+              </div>
+
+              {/* Filtro por precio máximo */}
+              <div className="col-md-2">
+                <input
+                  type="number"
+                  placeholder="Precio Máx"
+                  className="form-control form-control-sm bg-dark text-light border-gamer"
+                  value={priceRange.max}
+                  onChange={(e) => setPriceRange({...priceRange, max: e.target.value})}
+                />
+              </div>
+
+              {/* Ordenar por */}
+              <div className="col-md-2">
+                <select
+                  className="form-select form-select-sm bg-dark text-light border-gamer"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="">Ordenar por</option>
+                  <option value="price-asc">Precio: Menor a Mayor</option>
+                  <option value="price-desc">Precio: Mayor a Menor</option>
+                  <option value="name-asc">Nombre: A-Z</option>
+                  <option value="name-desc">Nombre: Z-A</option>
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* PRODUCTOS */}
-      <div className="row">
-        {filteredProducts.length === 0 ? (
-          <div className="col-12 text-center py-5">
-            <div className="text-light fs-4">😔 No se encontraron productos</div>
-            <p className="text-muted mb-4">Intenta con otros filtros de búsqueda</p>
-            <button 
-              className="btn btn-gamer"
-              onClick={resetFilters}
-            >
-              🔄 Mostrar Todos los Productos
-            </button>
-          </div>
-        ) : (
-          filteredProducts.map(product => (
-            <div key={product.id} className="col-12 col-sm-6 col-lg-4 mb-4">
-              <div className="card h-100 product-card">
-                <div className="product-img-container">
-                  <img 
-                    src={product.imageSrc} 
-                    className="product-img" 
-                    alt={product.title}
-                    onError={(e) => {
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='14' fill='%2339FF14'%3EImagen%3C/text%3E%3C/svg%3E";
-                    }}
-                  />
-                </div>
-                <div className="card-body text-center d-flex flex-column">
-                  <h5 className="card-title text-white fw-bold mb-2">{product.title}</h5>
-                  
-                  {/* Categoría */}
-                  <div className="mb-2">
-                    <span className="category-badge">{product.category}</span>
-                  </div>
-                  
-                  {/* Precio */}
-                  <p className="price-tag mb-3">{formatPrice(product.price)}</p>
-                  
-                  {/* Descripción */}
-                  <p className="card-text text-light flex-grow-1 product-description">
-                    {product.description.length > 100 
-                      ? `${product.description.substring(0, 100)}...` 
-                      : product.description
-                    }
-                  </p>
-                  
-                  {/* Botones */}
-                  <div className="mt-auto pt-3">
+      {/* LISTA DE PRODUCTOS */}
+      {filteredProducts.length === 0 ? (
+        <div className="alert alert-warning text-center">
+          <h4>No se encontraron productos</h4>
+          <p>No hay productos que coincidan con los filtros seleccionados.</p>
+          <button 
+            className="btn btn-gamer mt-2"
+            onClick={limpiarFiltros}
+          >
+            Mostrar todos los productos
+          </button>
+        </div>
+      ) : (
+        <div className="row">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
+              <div className="card card-gamer h-100">
+                <img 
+                  src={product.imageSrc} 
+                  className="card-img-top" 
+                  alt={product.title}
+                  style={{ height: "200px", objectFit: "cover" }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://via.placeholder.com/200x200/333/fff?text=Imagen+No+Disponible";
+                  }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title text-gamer">{product.title}</h5>
+                  {product.category && (
+                    <span className="badge bg-secondary mb-2">{product.category}</span>
+                  )}
+                  <p className="card-text text-light flex-grow-1">{product.description}</p>
+                  <div className="mt-auto">
+                    <p className="card-text text-gamer fw-bold h5">{formatPrice(product.price)}</p>
                     <div className="d-grid gap-2">
-                      <Link 
-                        to={`/product/${product.id}`}
-                        className="btn btn-outline-gamer btn-sm"
-                      >
-                        <i className="bi bi-eye me-2"></i> 
-                        Ver Detalle
-                      </Link>
                       <button 
-                        className="btn btn-gamer btn-sm"
-                        onClick={() => addToCart(product)}
+                        className="btn btn-gamer w-100"
+                        onClick={() => verDetalles(product)}
                       >
-                        <i className="bi bi-cart-plus me-2"></i>
-                        Agregar al Carrito
+                        👁️ Ver Detalles
+                      </button>
+                      <button 
+                        className="btn btn-outline-gamer w-100"
+                        onClick={() => agregarAlCarrito(product)}
+                      >
+                        🛒 Agregar al Carrito
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* BANNER PROMOCIONAL */}
-      <div className="row mt-5">
-        <div className="col-12">
-          <div className="feature-card p-4 text-center">
-            <h4 className="text-gamer mb-3">
-              <i className="bi bi-truck me-2"></i>
-              ¡Envío Gratis!
-            </h4>
-            <p className="text-light mb-0">
-              En compras superiores a <strong className="text-gamer">$50.000</strong> - 
-              <span className="text-warning"> ¡Solo por tiempo limitado!</span>
-            </p>
+      {/* MODAL DE DETALLES DEL PRODUCTO */}
+      {selectedProduct && (
+        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
+          <div className="modal-content product-detail-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h4 className="text-gamer">{selectedProduct.title}</h4>
+              <button 
+                className="close-btn"
+                onClick={() => setSelectedProduct(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <div className="col-md-6">
+                  <img 
+                    src={selectedProduct.imageSrc} 
+                    alt={selectedProduct.title}
+                    className="img-fluid rounded"
+                    style={{maxHeight: '400px', objectFit: 'cover', width: '100%'}}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x400/333/fff?text=Imagen+No+Disponible";
+                    }}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <div className="product-detail-info">
+                    {selectedProduct.category && (
+                      <span className="badge bg-secondary mb-3">{selectedProduct.category}</span>
+                    )}
+                    <p className="text-light fs-5">{selectedProduct.description}</p>
+                    
+                    <div className="product-features mb-4">
+                      <h6 className="text-gamer">Características:</h6>
+                      <ul className="text-light">
+                        <li>Producto de alta calidad gaming</li>
+                        <li>Garantía 12 meses</li>
+                        <li>Envío gratis en compras sobre $50.000</li>
+                        <li>Soporte técnico 24/7</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="product-details-price mb-4">
+                      <h3 className="text-gamer">{formatPrice(selectedProduct.price)}</h3>
+                      <small className="text-muted">IVA incluido</small>
+                    </div>
+                    
+                    <div className="d-grid gap-2">
+                      <button 
+                        className="btn btn-gamer btn-lg"
+                        onClick={() => {
+                          agregarAlCarrito(selectedProduct);
+                          setSelectedProduct(null);
+                        }}
+                      >
+                        🛒 Agregar al Carrito
+                      </button>
+                      <button 
+                        className="btn btn-outline-gamer"
+                        onClick={() => setSelectedProduct(null)}
+                      >
+                        Seguir Viendo Productos
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Estilos para el modal */}
+      <style>{`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 20px;
+        }
+
+        .product-detail-modal {
+          background: #1a1a1a;
+          border-radius: 15px;
+          max-width: 900px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          border: 2px solid #6f42c1;
+          box-shadow: 0 0 30px rgba(111, 66, 193, 0.3);
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+          border-bottom: 1px solid #333;
+          background: rgba(111, 66, 193, 0.1);
+        }
+
+        .modal-header h4 {
+          margin: 0;
+          color: #6f42c1;
+        }
+
+        .close-btn {
+          background: none;
+          border: none;
+          color: #fff;
+          font-size: 24px;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+          background: #6f42c1;
+          color: white;
+        }
+
+        .modal-body {
+          padding: 30px;
+        }
+
+        .product-detail-info {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .product-features {
+          border-left: 3px solid #6f42c1;
+          padding-left: 15px;
+        }
+
+        .product-features ul {
+          padding-left: 20px;
+          margin-bottom: 0;
+        }
+
+        .product-features li {
+          margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+          .modal-body {
+            padding: 20px;
+          }
+          
+          .product-detail-modal {
+            margin: 10px;
+          }
+        }
+      `}</style>
     </div>
   );
-};
+}
 
 export default Products;

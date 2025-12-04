@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logoGamer from '../assets/img/logo_gamer.png';
+import { products } from '../data/products';
 
-// Componente de Partículas para el fondo interactivo
+
+
+// Componente de Partículas para el fondo interactivo (EL MISMO QUE TIENES)
 const ParticlesBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -39,6 +42,7 @@ const ParticlesBackground: React.FC = () => {
         color: `rgba(57, 255, 20, ${Math.random() * 0.3 + 0.1})`
       });
     }
+    
 
     const animate = () => {
       ctx.fillStyle = 'rgba(11, 11, 11, 0.05)';
@@ -99,6 +103,329 @@ const ParticlesBackground: React.FC = () => {
   );
 };
 
+// Componente del Carrusel (NUEVO)
+const HeroCarousel: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const slides = [
+    {
+      id: 1,
+      title: "🎮 NUEVOS LANZAMIENTOS",
+      subtitle: "Tecnología Gaming 2024",
+      description: "Consolas, gráficas y periféricos de última generación",
+      image: "https://cdna.artstation.com/p/assets/images/images/021/720/920/original/pixel-jeff-mario.gif?1572709433",
+      bgColor: "linear-gradient(135deg, rgba(15, 12, 41, 0.9), rgba(48, 43, 99, 0.9))",
+      buttonText: "Ver Novedades",
+      link: "/products"
+    },
+    {
+      id: 2,
+      title: "🎧 AUDIO PROFESIONAL",
+      subtitle: "Hasta 30% OFF",
+      description: "Headsets con sonido envolvente 7.1 y cancelación de ruido",
+      image: "https://cdnb.artstation.com/p/assets/images/images/060/605/361/original/lemo-arts-dj-prem-800-px.gif?1678922493",
+      bgColor: "linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.9))",
+      buttonText: "Ver Ofertas",
+      link: "/products?category=Audio"
+    },
+    {
+      id: 3,
+      title: "⚡ ARMÁ TU SETUP",
+      subtitle: "Todo en un solo lugar",
+      description: "Sillas ergonómicas, escritorios gaming y iluminación RGB",
+      image: "https://i.pinimg.com/originals/eb/33/64/eb3364836900e5d9f854fdaa9e5f4c09.gif",
+      bgColor: "linear-gradient(135deg, rgba(15, 155, 15, 0.9), rgba(0, 0, 0, 0.9))",
+      buttonText: "Ver Setup",
+      link: "/products?category=Mobiliario"
+    }
+  ];
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (slideInterval.current) clearInterval(slideInterval.current);
+    };
+  }, []);
+
+  const startAutoSlide = () => {
+    if (slideInterval.current) clearInterval(slideInterval.current);
+    slideInterval.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    startAutoSlide();
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    startAutoSlide();
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    startAutoSlide();
+  };
+
+  return (
+    <div className="carousel-container" style={{
+      position: 'relative',
+      borderRadius: '20px',
+      overflow: 'hidden',
+      boxShadow: '0 15px 50px rgba(0, 0, 0, 0.7)',
+      border: '2px solid #39FF14',
+      marginBottom: '2rem'
+    }}>
+      <div 
+        className="carousel-slide"
+        style={{
+          height: '500px',
+          background: slides[currentSlide].bgColor,
+          backgroundImage: `url(${slides[currentSlide].image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundBlendMode: 'overlay',
+          transition: 'all 0.8s ease'
+        }}
+      >
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: 'linear-gradient(transparent, rgba(0, 0, 0, 0.9))',
+          padding: '60px 40px 40px',
+          color: 'white'
+        }}>
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-lg-8">
+                <span className="badge bg-dark text-white mb-3 px-3 py-2">
+                  {slides[currentSlide].subtitle}
+                </span>
+                <h1 className="display-4 fw-bold mb-3 text-white">
+                  {slides[currentSlide].title}
+                </h1>
+                <p className="lead mb-4 text-light fs-5">
+                  {slides[currentSlide].description}
+                </p>
+                <Link 
+                  to={slides[currentSlide].link}
+                  className="btn btn-gamer btn-lg px-4"
+                >
+                  <i className="bi bi-arrow-right me-2"></i>
+                  {slides[currentSlide].buttonText}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Botones de navegación */}
+        <button 
+          onClick={prevSlide}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '20px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(0, 0, 0, 0.5)',
+            border: '2px solid #39FF14',
+            color: 'white',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            zIndex: 10
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#39FF14';
+            e.currentTarget.style.color = 'black';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)';
+            e.currentTarget.style.color = 'white';
+          }}
+        >
+          <i className="bi bi-chevron-left fs-4"></i>
+        </button>
+        
+        <button 
+          onClick={nextSlide}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '20px',
+            transform: 'translateY(-50%)',
+            background: 'rgba(0, 0, 0, 0.5)',
+            border: '2px solid #39FF14',
+            color: 'white',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            zIndex: 10
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#39FF14';
+            e.currentTarget.style.color = 'black';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)';
+            e.currentTarget.style.color = 'white';
+          }}
+        >
+          <i className="bi bi-chevron-right fs-4"></i>
+        </button>
+        
+        {/* Indicadores */}
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: '12px',
+          zIndex: 10
+        }}>
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: currentSlide === index ? '#39FF14' : 'rgba(255, 255, 255, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                border: 'none',
+                transform: currentSlide === index ? 'scale(1.3)' : 'scale(1)',
+                boxShadow: currentSlide === index ? '0 0 10px #39FF14' : 'none'
+              }}
+              aria-label={`Ir a slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente de Productos Destacados (NUEVO)
+const FeaturedProducts: React.FC = () => {
+  const featuredProducts = [...products]
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 4);
+
+  return (
+    <section className="py-5 bg-dark">
+      <div className="container">
+        <h2 className="display-5 fw-bold text-center text-gamer mb-5">
+          🔥 PRODUCTOS DESTACADOS
+        </h2>
+        
+        <div className="row g-4">
+          {featuredProducts.map((product) => (
+            <div key={product.id} className="col-lg-3 col-md-6">
+              <div className="card h-100 bg-dark border-0" style={{
+                transition: 'all 0.3s ease',
+                borderRadius: '15px',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-10px)';
+                e.currentTarget.style.boxShadow = '0 15px 30px rgba(57, 255, 20, 0.2)';
+                e.currentTarget.style.borderColor = '#39FF14';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = '#333';
+              }}>
+                <div style={{ position: 'relative' }}>
+                  <img 
+                    src={product.imageSrc} 
+                    className="card-img-top" 
+                    alt={product.title}
+                    style={{ 
+                      height: '200px', 
+                      objectFit: 'cover',
+                      width: '100%'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='16' fill='%2339FF14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
+                    }}
+                  />
+                  <span style={{
+                    position: 'absolute',
+                    top: '15px',
+                    left: '15px',
+                    background: '#ff4757',
+                    color: 'white',
+                    padding: '5px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold'
+                  }}>
+                    DESTACADO
+                  </span>
+                </div>
+                <div className="card-body d-flex flex-column">
+                  <div className="mb-2">
+                    <span className="badge bg-secondary">{product.category}</span>
+                  </div>
+                  <h5 className="card-title text-white mb-3" style={{ minHeight: '50px' }}>
+                    {product.title}
+                  </h5>
+                  <p className="card-text text-light flex-grow-1" style={{ fontSize: '0.9rem' }}>
+                    {product.description.substring(0, 80)}...
+                  </p>
+                  <div className="mt-auto">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <span className="text-gamer fw-bold fs-4">
+                        ${product.price.toLocaleString('es-CL')}
+                      </span>
+                      <span className="text-warning">
+                        <i className="bi bi-star-fill"></i> 4.9
+                      </span>
+                    </div>
+                    <div className="d-grid gap-2">
+                      <Link 
+                        to={`/product/${product.id}`}
+                        className="btn btn-outline-gamer"
+                      >
+                        <i className="bi bi-eye me-2"></i> Ver Detalles
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="text-center mt-5">
+          <Link to="/products" className="btn btn-gamer btn-lg px-5">
+            <i className="bi bi-grid-3x3-gap me-2"></i> Ver Todos los Productos
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export const Home = () => {
   return (
     <>
@@ -106,6 +433,7 @@ export const Home = () => {
       
       <style>
         {`
+          /* Agregar estos estilos a los que ya tienes */
           .hero-section {
             background: linear-gradient(135deg, rgba(11, 11, 11, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
             position: relative;
@@ -299,10 +627,43 @@ export const Home = () => {
           .floating-element {
             animation: float 3s ease-in-out infinite;
           }
+          
+          /* Estilos para el carrusel */
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          
+          @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+          }
+          
+          .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #39FF14, transparent);
+            border-radius: 2px;
+          }
+          
+          .section-title.center::after {
+            left: 50%;
+            transform: translateX(-50%);
+          }
         `}
       </style>
 
-      {/* Hero Section Épica */}
+      {/* === HERO SECTION (MANTENIENDO TU DISEÑO) === */}
       <section id="inicio" className="py-5 text-center text-white hero-section">
         <div className="container position-relative">
           <div className="row align-items-center g-5">
@@ -349,39 +710,51 @@ export const Home = () => {
               </div>
             </div>
 
-<div className="col-12 col-lg-6 text-center">
-  <img 
-    src={logoGamer} 
-    alt="Level Up Gamer Logo" 
-    className="img-fluid rounded shadow-lg hero-image floating-element" 
-    style={{maxWidth: "450px"}} 
-    onError={(e) => {
-      e.currentTarget.style.display = 'none';
-      const container = e.currentTarget.parentElement;
-      if (container) {
-        const fallback = document.createElement('div');
-        fallback.className = 'text-center';
-        fallback.innerHTML = `
-          <div class="mario-character">🎮</div>
-          <h3 class="text-success mt-3">LEVEL UP GAMER</h3>
-          <p class="text-light">Tu tienda gaming definitiva</p>
-        `;
-        container.appendChild(fallback);
-      }
-    }}
-  />
-  {/* Badge de oferta */}
-  <div className="mt-4">
-    <span className="badge bg-success fs-6 p-3 rounded-pill">
-      🎉 OFERTA ESPECIAL: 15% OFF EN HEADSETS GAMER
-    </span>
-  </div>
-</div>
+            <div className="col-12 col-lg-6 text-center">
+              <img 
+                src={logoGamer} 
+                alt="Level Up Gamer Logo" 
+                className="img-fluid rounded shadow-lg hero-image floating-element" 
+                style={{maxWidth: "450px"}} 
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const container = e.currentTarget.parentElement;
+                  if (container) {
+                    const fallback = document.createElement('div');
+                    fallback.className = 'text-center';
+                    fallback.innerHTML = `
+                      <div class="mario-character">🎮</div>
+                      <h3 class="text-success mt-3">LEVEL UP GAMER</h3>
+                      <p class="text-light">Tu tienda gaming definitiva</p>
+                    `;
+                    container.appendChild(fallback);
+                  }
+                }}
+              />
+              {/* Badge de oferta */}
+              <div className="mt-4">
+                <span className="badge bg-success fs-6 p-3 rounded-pill">
+                  🎉 OFERTA ESPECIAL: 15% OFF EN HEADSETS GAMER
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Visión*/}
+      {/* === CARRUSEL PROFESIONAL (NUEVO) === */}
+      <section className="py-0">
+        <div className="container">
+          <HeroCarousel />
+        </div>
+      </section>
+
+      {/* === PRODUCTOS DESTACADOS (NUEVO) === */}
+      <FeaturedProducts />
+
+      {/* === MANTENIENDO TODAS TUS SECCIONES ORIGINALES === */}
+      
+      {/* Visión */}
       <section id="vision" className="py-5 bg-black text-white">
         <div className="container">
           <header className="text-center mb-5">
@@ -460,69 +833,68 @@ export const Home = () => {
       </section>
 
       {/* Comunidad Gamer Épica */}
-<section id="comunidad" className="py-5 bg-black text-white">
-  <div className="container">
-    <header className="text-center mb-5">
-      <h2 className="display-4 fw-bold text-gamer mb-3">COMUNIDAD GAMER</h2>
-      <p className="text-light fs-5">Conecta, compite y crece con otros gamers 😊</p>
-    </header>
+      <section id="comunidad" className="py-5 bg-black text-white">
+        <div className="container">
+          <header className="text-center mb-5">
+            <h2 className="display-4 fw-bold text-gamer mb-3">COMUNIDAD GAMER</h2>
+            <p className="text-light fs-5">Conecta, compite y crece con otros gamers 😊</p>
+          </header>
 
-    <div className="row g-4">
-      <div className="col-12 col-md-6 col-lg-3 text-center">
-        <div className="feature-card p-4 h-100">
-          <div className="mario-character" style={{
-            fontSize: '3rem',
-            marginBottom: '1rem',
-            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
-          }}>🏆</div> 
-          <h4 className="text-white mb-3">TORNEOS ÉPICOS</h4>
-          <p className="text-light">Competencias mensuales con premios legendarios y reconocimiento</p>
-        </div>
-      </div>
-      
-      <div className="col-12 col-md-6 col-lg-3 text-center">
-        <div className="feature-card p-4 h-100">
-          <div className="mario-character" style={{
-            fontSize: '3rem',
-            marginBottom: '1rem',
-            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
-          }}>🎁</div>
-          <h4 className="text-white mb-3">SORTEOS LEGENDARIOS</h4>
-          <p className="text-light">Productos exclusivos semanales para la comunidad</p>
-        </div>
-      </div>
-      
-      <div className="col-12 col-md-6 col-lg-3 text-center">
-        <div className="feature-card p-4 h-100">
-          <div className="mario-character" style={{
-            fontSize: '3rem',
-            marginBottom: '1rem',
-            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
-          }}>💬</div>
-          <h4 className="text-white mb-3">FOROS ESTRATÉGICOS</h4>
-          <p className="text-light">Discute tácticas, comparte tips y resuelve dudas</p>
-        </div>
-      </div>
-      
-      <div className="col-12 col-md-6 col-lg-3 text-center">
-        <div className="feature-card p-4 h-100">
-          <div className="mario-character" style={{
-            fontSize: '3rem',
-            marginBottom: '1rem',
-            filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
-          }}>📚</div>
-          <h4 className="text-white mb-3">GUÍAS PRO</h4>
-          <p className="text-light">Aprende de los mejores y domina cada juego</p>
-        </div>
-      </div>
-    </div>
+          <div className="row g-4">
+            <div className="col-12 col-md-6 col-lg-3 text-center">
+              <div className="feature-card p-4 h-100">
+                <div className="mario-character" style={{
+                  fontSize: '3rem',
+                  marginBottom: '1rem',
+                  filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+                }}>🏆</div> 
+                <h4 className="text-white mb-3">TORNEOS ÉPICOS</h4>
+                <p className="text-light">Competencias mensuales con premios legendarios y reconocimiento</p>
+              </div>
+            </div>
+            
+            <div className="col-12 col-md-6 col-lg-3 text-center">
+              <div className="feature-card p-4 h-100">
+                <div className="mario-character" style={{
+                  fontSize: '3rem',
+                  marginBottom: '1rem',
+                  filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+                }}>🎁</div>
+                <h4 className="text-white mb-3">SORTEOS LEGENDARIOS</h4>
+                <p className="text-light">Productos exclusivos semanales para la comunidad</p>
+              </div>
+            </div>
+            
+            <div className="col-12 col-md-6 col-lg-3 text-center">
+              <div className="feature-card p-4 h-100">
+                <div className="mario-character" style={{
+                  fontSize: '3rem',
+                  marginBottom: '1rem',
+                  filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+                }}>💬</div>
+                <h4 className="text-white mb-3">FOROS ESTRATÉGICOS</h4>
+                <p className="text-light">Discute tácticas, comparte tips y resuelve dudas</p>
+              </div>
+            </div>
+            
+            <div className="col-12 col-md-6 col-lg-3 text-center">
+              <div className="feature-card p-4 h-100">
+                <div className="mario-character" style={{
+                  fontSize: '3rem',
+                  marginBottom: '1rem',
+                  filter: 'drop-shadow(0 0 10px rgba(57, 255, 20, 0.5))'
+                }}>📚</div>
+                <h4 className="text-white mb-3">GUÍAS PRO</h4>
+                <p className="text-light">Aprende de los mejores y domina cada juego</p>
+              </div>
+            </div>
+          </div>
 
-    {/* Botón de acción opcional */}
-    <div className="text-center mt-5">
-      <button className="btn-gamer btn-lg">Únete a la Comunidad</button>
-    </div>
-  </div>
-</section>
+          <div className="text-center mt-5">
+            <button className="btn btn-gamer btn-lg">Únete a la Comunidad</button>
+          </div>
+        </div>
+      </section>
 
       {/* Programa LevelUp Interactivo */}
       <section id="fidelizacion" className="py-5 bg-dark text-white">
